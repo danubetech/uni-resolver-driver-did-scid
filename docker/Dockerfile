@@ -16,14 +16,15 @@ MAINTAINER Markus Sabadello <markus@danubetech.com>
 
 # variables
 
-ENV uniresolver_driver_did_scid_didResolverUrl=http://localhost:8080/1.0/identifiers/
+ENV uniresolver_driver_did_scid_didResolverUri=http://localhost:8080/1.0/identifiers/
 ENV uniresolver_driver_did_scid_wrapperHttpDomain=http://localhost:8080/1.0/identifiers/
+ENV uniresolver_driver_did_scid_wrapperFilesPath=/opt/wrapper-files/
 
 # copy from build stage
 
 COPY --from=build --chown=jetty /opt/driver-did-scid/target/*.war /var/lib/jetty/webapps/ROOT.war
 
-#done
+# done
 
 EXPOSE 8080
 RUN java -Djetty.http.port=8080 -jar "$JETTY_HOME/start.jar" --add-modules=ee10-webapp,ee10-deploy,ee10-jsp,ee10-jstl

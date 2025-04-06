@@ -67,8 +67,12 @@ public class DidScidDriver implements Driver {
         // transform to source method
 
 		Matcher matcher = DID_SCID_PATTERN.matcher(identifier.toString());
+		if (! matcher.matches()) {
+			throw new ResolutionException(ResolutionException.ERROR_INVALIDDID, "Not a valid did:scid: " + identifier);
+		}
 		String format = matcher.group(1);
 		Integer version = Integer.parseInt(matcher.group(2));
+		String scid = matcher.group(3);
 
 		SourceMethod sourceMethod;
 		DID sourceDid;
@@ -79,11 +83,11 @@ public class DidScidDriver implements Driver {
 			throw new ResolutionException(ResolutionException.ERROR_INVALIDDID, "Unsupported did:scid format " + format + " and version " + version);
 		}
 
-		sourceDid = sourceMethod.toSourceDID(identifier, this.getWrapperHttpUrl());
+		sourceDid = sourceMethod.toSourceDID(srcData);
 
 		// prepare "src" data according to source method
 
-		sourceMethod.prepareSrcData(srcData, this.getWrapperFilesPath());
+		sourceMethod.prepareSrcData(srcValue, this.getWrapperFilesPath(), srcData);
 
 		// resolve source DID
 
@@ -108,7 +112,7 @@ public class DidScidDriver implements Driver {
 	}
 
 	@Override
-	public DereferenceResult dereference(DIDURL didurl, Map<String, Object> map) throws DereferencingException, ResolutionException {
+	public DereferenceResult dereference(DIDURL didurl, Map<String, Object> dereferenceOptions) throws DereferencingException, ResolutionException {
 		throw new RuntimeException("Not implemented");
 	}
 

@@ -59,6 +59,7 @@ public class Configuration {
 
             // configure
 
+            didScidDriver.setClientUniResolver(clientUniResolver);
             didScidDriver.setClientUniDeferencer(clientUniDereferencer);
             didScidDriver.setWrapperHttpUrl(prop_wrapperHttpUrl);
             didScidDriver.setWrapperFilesPath(prop_wrapperFilesPath);

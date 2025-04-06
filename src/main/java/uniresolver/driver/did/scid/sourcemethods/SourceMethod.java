@@ -4,6 +4,6 @@ import foundation.identity.did.DID;
 
 public interface SourceMethod {
 
-    void prepareSrcData(byte[] srcData, String wrapperFilesPath);
-    DID toSourceDID(DID identifier, String httpUrl);
+    void prepareSrcData(String srcValue, String wrapperFilesPath, byte[] srcData);
+    DID toSourceDID(byte[] srcData);
 }
