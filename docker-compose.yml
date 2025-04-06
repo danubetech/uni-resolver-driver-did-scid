@@ -1,0 +1,51 @@
+version: "3.6"
+
+volumes:
+  src-web-server-html-volume:
+
+networks:
+  mynetwork:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.3.0.0/16
+          gateway: 10.3.0.1
+
+services:
+  src-dns-server:
+    image: technitium/dns-server:13.4.3
+    volumes:
+      - ./resources/src-dns-server-config-volume:/etc/dns
+    networks:
+      mynetwork:
+        ipv4_address: 10.3.0.2
+  src-web-server:
+    image: nginx:1.27.4
+    dns:
+      - "10.3.0.2"
+    volumes:
+      - ./resources/src-web-server-config-volume:/etc/web
+      - src-web-server-html-volume:/usr/share/nginx/html
+    networks:
+      mynetwork:
+        ipv4_address: 10.3.0.3
+  driver-did-scid:
+    image: universalresolver/driver-did-scid:latest
+    container_name: driver-did-scid
+    ports:
+      - "10080:8080"
+    environment:
+      uniresolver_driver_did_scid_didResolverUri: http://driver-did-webvh/1.0/identifiers/
+      uniresolver_driver_did_scid_wrapperHttpUrl: http://src-web-server/
+      uniresolver_driver_did_scid_wrapperFilesPath: /opt/wrapper-files/
+    volumes:
+      - src-web-server-html-volume:/opt/wrapper-files
+    networks:
+      mynetwork:
+  driver-did-webvh:
+    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:main
+    container_name: driver-did-webvh
+    ports:
+      - "8154:8080"
+    networks:
+      mynetwork:

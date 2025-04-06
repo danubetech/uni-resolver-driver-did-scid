@@ -1,0 +1,113 @@
+[2025-04-03 13:33:03 UTC] Logging started.
+[2025-04-03 13:33:03 UTC] DHCP Server successfully saved scope file: /etc/dns/scopes/Default.scope
+[2025-04-03 13:33:03 UTC] DNS Server auth config file was not found: /etc/dns/auth.config
+[2025-04-03 13:33:03 UTC] DNS Server is restoring default auth config file.
+[2025-04-03 13:33:03 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:33:03 UTC] DNS Server config file was not found: /etc/dns/dns.config
+[2025-04-03 13:33:03 UTC] DNS Server is restoring default config file.
+[2025-04-03 13:33:03 UTC] DNS Server config file was saved: /etc/dns/dns.config
+[2025-04-03 13:33:03 UTC] DNS Server is loading allowed zone file: /etc/dns/allowed.config
+[2025-04-03 13:33:03 UTC] DNS Server is loading blocked zone file: /etc/dns/blocked.config
+[2025-04-03 13:33:03 UTC] [[::]:5380] [HTTP] Web Service was bound successfully.
+[2025-04-03 13:33:03 UTC] [0.0.0.0:53] [UDP] DNS Server was bound successfully.
+[2025-04-03 13:33:03 UTC] [0.0.0.0:53] [TCP] DNS Server was bound successfully.
+[2025-04-03 13:33:03 UTC] [[::]:53] [UDP] DNS Server was bound successfully.
+[2025-04-03 13:33:03 UTC] [[::]:53] [TCP] DNS Server was bound successfully.
+[2025-04-03 13:33:03 UTC] DHCP Server successfully loaded scope: Default
+[2025-04-03 13:33:03 UTC] DHCP Server successfully loaded scope file: /etc/dns/scopes/Default.scope
+[2025-04-03 13:33:03 UTC] DNS Server (v13.4.3.0) was started successfully.
+[2025-04-03 13:33:13 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:33:40 UTC] DHCP Server successfully unloaded scope: Default
+[2025-04-03 13:33:40 UTC] Saving DNS Cache to disk...
+[2025-04-03 13:33:40 UTC] DNS Cache was saved to disk successfully.
+[2025-04-03 13:33:40 UTC] DNS Server (v13.4.3.0) was stopped successfully.
+[2025-04-03 13:33:40 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:33:40 UTC] Logging stopped.
+[2025-04-03 13:33:51 UTC] Logging started.
+[2025-04-03 13:33:51 UTC] DNS Server auth config file was loaded: /etc/dns/auth.config
+[2025-04-03 13:33:51 UTC] DNS Server config file was loaded: /etc/dns/dns.config
+[2025-04-03 13:33:51 UTC] DNS Server is loading allowed zone file: /etc/dns/allowed.config
+[2025-04-03 13:33:51 UTC] DNS Server is loading blocked zone file: /etc/dns/blocked.config
+[2025-04-03 13:33:51 UTC] Loading DNS Cache from disk...
+[2025-04-03 13:33:51 UTC] DNS Cache was loaded from disk successfully.
+[2025-04-03 13:33:52 UTC] [[::]:5380] [HTTP] Web Service was bound successfully.
+[2025-04-03 13:33:52 UTC] [0.0.0.0:53] [UDP] DNS Server was bound successfully.
+[2025-04-03 13:33:52 UTC] [0.0.0.0:53] [TCP] DNS Server was bound successfully.
+[2025-04-03 13:33:52 UTC] [[::]:53] [UDP] DNS Server was bound successfully.
+[2025-04-03 13:33:52 UTC] [[::]:53] [TCP] DNS Server was bound successfully.
+[2025-04-03 13:33:52 UTC] DHCP Server successfully loaded scope: Default
+[2025-04-03 13:33:52 UTC] DHCP Server successfully loaded scope file: /etc/dns/scopes/Default.scope
+[2025-04-03 13:33:52 UTC] DNS Server (v13.4.3.0) was started successfully.
+[2025-04-03 13:34:01 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:34:06 UTC] DHCP Server successfully unloaded scope: Default
+[2025-04-03 13:34:06 UTC] Saving DNS Cache to disk...
+[2025-04-03 13:34:06 UTC] DNS Cache was saved to disk successfully.
+[2025-04-03 13:34:06 UTC] DNS Server (v13.4.3.0) was stopped successfully.
+[2025-04-03 13:34:06 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:34:06 UTC] Logging stopped.
+[2025-04-03 13:34:55 UTC] Logging started.
+[2025-04-03 13:34:55 UTC] DNS Server auth config file was loaded: /etc/dns/auth.config
+[2025-04-03 13:34:55 UTC] DNS Server config file was loaded: /etc/dns/dns.config
+[2025-04-03 13:34:55 UTC] DNS Server is loading allowed zone file: /etc/dns/allowed.config
+[2025-04-03 13:34:55 UTC] DNS Server is loading blocked zone file: /etc/dns/blocked.config
+[2025-04-03 13:34:55 UTC] Loading DNS Cache from disk...
+[2025-04-03 13:34:55 UTC] DNS Cache was loaded from disk successfully.
+[2025-04-03 13:34:55 UTC] [[::]:5380] [HTTP] Web Service was bound successfully.
+[2025-04-03 13:34:55 UTC] [0.0.0.0:53] [UDP] DNS Server was bound successfully.
+[2025-04-03 13:34:55 UTC] [0.0.0.0:53] [TCP] DNS Server was bound successfully.
+[2025-04-03 13:34:55 UTC] [[::]:53] [UDP] DNS Server was bound successfully.
+[2025-04-03 13:34:55 UTC] [[::]:53] [TCP] DNS Server was bound successfully.
+[2025-04-03 13:34:55 UTC] DHCP Server successfully loaded scope: Default
+[2025-04-03 13:34:55 UTC] DHCP Server successfully loaded scope file: /etc/dns/scopes/Default.scope
+[2025-04-03 13:34:55 UTC] DNS Server (v13.4.3.0) was started successfully.
+[2025-04-03 13:35:05 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:35:18 UTC] DHCP Server successfully unloaded scope: Default
+[2025-04-03 13:35:18 UTC] Saving DNS Cache to disk...
+[2025-04-03 13:35:18 UTC] DNS Cache was saved to disk successfully.
+[2025-04-03 13:35:18 UTC] DNS Server (v13.4.3.0) was stopped successfully.
+[2025-04-03 13:35:18 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:35:18 UTC] Logging stopped.
+[2025-04-03 13:35:29 UTC] Logging started.
+[2025-04-03 13:35:29 UTC] DNS Server auth config file was loaded: /etc/dns/auth.config
+[2025-04-03 13:35:29 UTC] DNS Server config file was loaded: /etc/dns/dns.config
+[2025-04-03 13:35:29 UTC] DNS Server is loading allowed zone file: /etc/dns/allowed.config
+[2025-04-03 13:35:29 UTC] DNS Server is loading blocked zone file: /etc/dns/blocked.config
+[2025-04-03 13:35:29 UTC] Loading DNS Cache from disk...
+[2025-04-03 13:35:29 UTC] DNS Cache was loaded from disk successfully.
+[2025-04-03 13:35:29 UTC] [[::]:5380] [HTTP] Web Service was bound successfully.
+[2025-04-03 13:35:29 UTC] [0.0.0.0:53] [UDP] DNS Server was bound successfully.
+[2025-04-03 13:35:29 UTC] [0.0.0.0:53] [TCP] DNS Server was bound successfully.
+[2025-04-03 13:35:29 UTC] [[::]:53] [UDP] DNS Server was bound successfully.
+[2025-04-03 13:35:29 UTC] [[::]:53] [TCP] DNS Server was bound successfully.
+[2025-04-03 13:35:29 UTC] DHCP Server successfully loaded scope: Default
+[2025-04-03 13:35:29 UTC] DHCP Server successfully loaded scope file: /etc/dns/scopes/Default.scope
+[2025-04-03 13:35:29 UTC] DNS Server (v13.4.3.0) was started successfully.
+[2025-04-03 13:35:39 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:35:57 UTC] DHCP Server successfully unloaded scope: Default
+[2025-04-03 13:35:57 UTC] Saving DNS Cache to disk...
+[2025-04-03 13:35:57 UTC] DNS Cache was saved to disk successfully.
+[2025-04-03 13:35:57 UTC] DNS Server (v13.4.3.0) was stopped successfully.
+[2025-04-03 13:35:57 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:35:57 UTC] Logging stopped.
+[2025-04-03 13:36:08 UTC] Logging started.
+[2025-04-03 13:36:08 UTC] DNS Server auth config file was loaded: /etc/dns/auth.config
+[2025-04-03 13:36:08 UTC] DNS Server config file was loaded: /etc/dns/dns.config
+[2025-04-03 13:36:08 UTC] DNS Server is loading allowed zone file: /etc/dns/allowed.config
+[2025-04-03 13:36:08 UTC] DNS Server is loading blocked zone file: /etc/dns/blocked.config
+[2025-04-03 13:36:08 UTC] Loading DNS Cache from disk...
+[2025-04-03 13:36:08 UTC] DNS Cache was loaded from disk successfully.
+[2025-04-03 13:36:08 UTC] [[::]:5380] [HTTP] Web Service was bound successfully.
+[2025-04-03 13:36:08 UTC] [0.0.0.0:53] [UDP] DNS Server was bound successfully.
+[2025-04-03 13:36:08 UTC] [0.0.0.0:53] [TCP] DNS Server was bound successfully.
+[2025-04-03 13:36:08 UTC] [[::]:53] [UDP] DNS Server was bound successfully.
+[2025-04-03 13:36:08 UTC] [[::]:53] [TCP] DNS Server was bound successfully.
+[2025-04-03 13:36:08 UTC] DHCP Server successfully loaded scope: Default
+[2025-04-03 13:36:08 UTC] DHCP Server successfully loaded scope file: /etc/dns/scopes/Default.scope
+[2025-04-03 13:36:08 UTC] DNS Server (v13.4.3.0) was started successfully.
+[2025-04-03 13:36:18 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:38:30 UTC] DHCP Server successfully unloaded scope: Default
+[2025-04-03 13:38:30 UTC] Saving DNS Cache to disk...
+[2025-04-03 13:38:30 UTC] DNS Cache was saved to disk successfully.
+[2025-04-03 13:38:30 UTC] DNS Server (v13.4.3.0) was stopped successfully.
+[2025-04-03 13:38:30 UTC] DNS Server auth config file was saved: /etc/dns/auth.config
+[2025-04-03 13:38:30 UTC] Logging stopped.
