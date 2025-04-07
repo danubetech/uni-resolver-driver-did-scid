@@ -18,9 +18,9 @@ networks:
 
 services:
   src-dns-server:
-    image: technitium/dns-server:13.4.3
+    image: ubuntu/bind9:latest
     volumes:
-      - ./resources/src-dns-server-config-volume:/etc/dns
+      - ./resources/src-dns-server-config-volume/catch-all.zone:/etc/bind/catch-all.zone
     networks:
       driver-did-scid:
         ipv4_address: 10.3.0.2
