@@ -1,6 +1,7 @@
 package uniresolver.driver.did.scid;
 
 import foundation.identity.did.DID;
+import foundation.identity.did.DIDDocument;
 import foundation.identity.did.DIDURL;
 import foundation.identity.did.representations.Representations;
 import org.slf4j.Logger;
@@ -15,7 +16,6 @@ import uniresolver.driver.did.scid.sourcemethods.SourceMethod;
 import uniresolver.driver.did.scid.sourcemethods.WebvhSourceMethod;
 import uniresolver.driver.did.scid.srcdereferencers.DidUrlSrcDereferencer;
 import uniresolver.driver.did.scid.srcdereferencers.DomainSrcDereferencer;
-import uniresolver.driver.did.scid.srcdereferencers.SidecarDereferencer;
 import uniresolver.driver.did.scid.srcdereferencers.SrcDereferencer;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
@@ -37,7 +37,6 @@ public class DidScidDriver implements Driver {
 
 	private ClientUniResolver clientUniResolver;
 	private ClientUniDereferencer clientUniDeferencer;
-	private String wrapperHttpUrl;
 	private String wrapperFilesPath;
 
 	public DidScidDriver() {
@@ -60,7 +59,6 @@ public class DidScidDriver implements Driver {
 		// dereference "src" value
 
 		List<SrcDereferencer> srcDereferencers = List.of(
-				new SidecarDereferencer(),
 				new DidUrlSrcDereferencer(this.getClientUniDeferencer()),
 				new DomainSrcDereferencer()
 		);
@@ -79,7 +77,7 @@ public class DidScidDriver implements Driver {
 		if (srcData == null) throw new ResolutionException("No result from dereferencing 'src' value " + srcValue);
 		if (log.isInfoEnabled()) log.info("For 'src' value {} dereferenced {} bytes", srcValue, srcData.length);
 
-        // transform to source method
+        // transform to source DID
 
 		Matcher matcher = DID_SCID_PATTERN.matcher(identifier.toString());
 		if (! matcher.matches()) {
@@ -107,6 +105,12 @@ public class DidScidDriver implements Driver {
 		// resolve source DID
 
 		ResolveResult resolveResult = this.getClientUniResolver().resolve(sourceDid.toString());
+
+		// adjust source DID in DID document
+
+		DIDDocument didDocument = resolveResult.getDidDocument();
+		didDocument = DIDDocument.fromJson(didDocument.toJson().replace(sourceDid.toString(), identifier.toString()));
+		resolveResult.setDidDocument(didDocument);
 
 		// DID RESOLUTION METADATA
 
@@ -164,15 +168,6 @@ public class DidScidDriver implements Driver {
 	public void setClientUniDeferencer(ClientUniDereferencer clientUniDeferencer) {
 		this.clientUniDeferencer = clientUniDeferencer;
 	}
-
-	public String getWrapperHttpUrl() {
-		return this.wrapperHttpUrl;
-	}
-
-	public void setWrapperHttpUrl(String wrapperHttpUrl) {
-		this.wrapperHttpUrl = wrapperHttpUrl;
-	}
-
 	public String getWrapperFilesPath() {
 		return this.wrapperFilesPath;
 	}

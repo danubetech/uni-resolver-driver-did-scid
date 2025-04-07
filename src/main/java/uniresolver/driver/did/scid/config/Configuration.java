@@ -23,11 +23,9 @@ public class Configuration {
         try {
 
             String env_didResolverUri = System.getenv("uniresolver_driver_did_scid_didResolverUri");
-            String env_wrapperHttpUrl = System.getenv("uniresolver_driver_did_scid_wrapperHttpUrl");
             String env_wrapperFilesPath = System.getenv("uniresolver_driver_did_scid_wrapperFilesPath");
 
             if (env_didResolverUri != null) properties.put("didResolverUri", env_didResolverUri);
-            if (env_wrapperHttpUrl != null) properties.put("wrapperHttpUrl", env_wrapperHttpUrl);
             if (env_wrapperFilesPath != null) properties.put("wrapperFilesPath", env_wrapperFilesPath);
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex.getMessage(), ex);
@@ -49,10 +47,6 @@ public class Configuration {
             ClientUniResolver clientUniResolver = ClientUniResolver.create(URI.create(prop_didResolverUri));
             ClientUniDereferencer clientUniDereferencer = ClientUniDereferencer.create(URI.create(prop_didResolverUri));
 
-            // parse wrapperHttpUrl
-
-            String prop_wrapperHttpUrl = (String) properties.get("wrapperHttpUrl");
-
             // parse wrapperFilesPath
 
             String prop_wrapperFilesPath = (String) properties.get("wrapperFilesPath");
@@ -61,7 +55,6 @@ public class Configuration {
 
             didScidDriver.setClientUniResolver(clientUniResolver);
             didScidDriver.setClientUniDeferencer(clientUniDereferencer);
-            didScidDriver.setWrapperHttpUrl(prop_wrapperHttpUrl);
             didScidDriver.setWrapperFilesPath(prop_wrapperFilesPath);
         } catch (IllegalArgumentException ex) {
             throw ex;

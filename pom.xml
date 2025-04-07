@@ -231,6 +231,11 @@
 			<artifactId>json-patch</artifactId>
 			<version>1.13</version>
 		</dependency>
+		<dependency>
+			<groupId>com.hedera.hashgraph</groupId>
+			<artifactId>sdk</artifactId>
+			<version>2.53.0</version>
+		</dependency>
 	</dependencies>
 
 </project>
