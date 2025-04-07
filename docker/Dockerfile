@@ -14,6 +14,13 @@ RUN cd /opt/driver-did-scid/ && mvn clean package -P war -N -DskipTests
 FROM jetty:12.0.18-jre21-eclipse-temurin
 MAINTAINER Markus Sabadello <markus@danubetech.com>
 
+USER root
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get -y update && \
+    apt-get install -y --no-install-recommends iputils-ping && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+USER jetty
+
 # variables
 
 ENV uniresolver_driver_did_scid_didResolverUri=http://localhost:8080/1.0/identifiers/

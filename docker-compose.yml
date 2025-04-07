@@ -26,14 +26,14 @@ services:
         ipv4_address: 10.3.0.2
   src-web-server:
     image: nginx:1.27.4
-    dns:
-      - "10.3.0.2"
     volumes:
       - ./resources/src-web-server-config-volume:/etc/web
       - src-web-server-html-volume:/usr/share/nginx/html
     networks:
       driver-did-scid:
         ipv4_address: 10.3.0.3
+    dns:
+      - "10.3.0.2"
   driver-did-scid:
     image: universalresolver/driver-did-scid:latest
     container_name: driver-did-scid
@@ -45,14 +45,21 @@ services:
       uniresolver_driver_did_scid_wrapperFilesPath: /opt/wrapper-files/
     volumes:
       - src-web-server-html-volume:/opt/wrapper-files
+      - ./resources/driver-did-scid-config-volume/resolv.conf:/etc/resolv.conf
     networks:
       driver-did-scid:
       universal-resolver:
+    dns:
+      - "10.3.0.2"
   driver-did-webvh:
     image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:main
     container_name: driver-did-webvh
     ports:
       - "8154:8080"
+    volumes:
+      - ./resources/driver-did-webvh-config-volume/resolv.conf:/etc/resolv.conf
     networks:
       driver-did-scid:
       universal-resolver:
+    dns:
+      - "10.3.0.2"
