@@ -10,12 +10,12 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class WebvhSourceMethod implements SourceMethod {
+public class WebsSourceMethod implements SourceMethod {
 
-    public static final String DID_SCID_FORMAT = "vh";
+    public static final String DID_SCID_FORMAT = "ke";
     public static final Integer DID_SCID_VERSION = 1;
 
-    private static final Logger log = LoggerFactory.getLogger(WebvhSourceMethod.class);
+    private static final Logger log = LoggerFactory.getLogger(WebsSourceMethod.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -54,7 +54,7 @@ public class WebvhSourceMethod implements SourceMethod {
         if (log.isDebugEnabled()) log.info("For 'srcValue' {}: path {}", srcValue, path);
         boolean mkdir = path.mkdirs();
         if (log.isDebugEnabled()) log.info("For 'srcValue' {}: mkdir {}", srcValue, mkdir);
-        File file = new File(path, "/did.jsonl");
+        File file = new File(path, "/did.cesr");
         if (log.isDebugEnabled()) log.info("For 'srcValue' {}: file {}", srcValue, file);
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             fileOutputStream.write(srcData);

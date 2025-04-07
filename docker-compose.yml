@@ -18,25 +18,34 @@ networks:
 
 services:
   src-dns-server:
+    container_name: src-dns-server
     image: ubuntu/bind9:latest
     volumes:
       - ./resources/src-dns-server-config-volume/catch-all.zone:/etc/bind/catch-all.zone
+      - ./resources/src-dns-server-config-volume/named.conf.local:/etc/bind/named.conf.local
+      - ./resources/src-dns-server-config-volume/named.conf.default-zones:/etc/bind/named.conf.default-zones
     networks:
       driver-did-scid:
         ipv4_address: 10.3.0.2
   src-web-server:
+    container_name: src-web-server
     image: nginx:1.27.4
     volumes:
-      - ./resources/src-web-server-config-volume:/etc/web
       - src-web-server-html-volume:/usr/share/nginx/html
+      - ./resources/src-web-server-config-volume/default-ssl.conf:/etc/nginx/conf.d/default-ssl.conf
+      - ./resources/src-web-server-config-volume/self-signed.conf:/etc/nginx/snippets/self-signed.conf
+      - ./resources/src-web-server-config-volume/ssl-params.conf:/etc/nginx/snippets/ssl-params.conf
+      - ./resources/src-web-server-config-volume/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
+      - ./resources/src-web-server-config-volume/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
+      - ./resources/src-web-server-config-volume/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
     networks:
       driver-did-scid:
         ipv4_address: 10.3.0.3
     dns:
       - "10.3.0.2"
   driver-did-scid:
-    image: universalresolver/driver-did-scid:latest
     container_name: driver-did-scid
+    image: universalresolver/driver-did-scid:latest
     ports:
       - "10080:8080"
     environment:
@@ -45,19 +54,24 @@ services:
       uniresolver_driver_did_scid_wrapperFilesPath: /opt/wrapper-files/
     volumes:
       - src-web-server-html-volume:/opt/wrapper-files
-      - ./resources/driver-did-scid-config-volume/resolv.conf:/etc/resolv.conf
+    networks:
+      driver-did-scid:
+      universal-resolver:
+  driver-did-webvh:
+    container_name: driver-did-webvh
+    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:main
+    volumes:
+      - ./resources/driver-did-webvh-config-volume/resolv.conf:/etc/resolv.conf
     networks:
       driver-did-scid:
       universal-resolver:
     dns:
       - "10.3.0.2"
-  driver-did-webvh:
-    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:main
-    container_name: driver-did-webvh
-    ports:
-      - "8154:8080"
+  driver-did-webs:
+    container_name: driver-did-webs
+    image: gleif/did-webs-resolver-service:iiw37
     volumes:
-      - ./resources/driver-did-webvh-config-volume/resolv.conf:/etc/resolv.conf
+      - ./resources/driver-did-webs-config-volume/resolv.conf:/etc/resolv.conf
     networks:
       driver-did-scid:
       universal-resolver:

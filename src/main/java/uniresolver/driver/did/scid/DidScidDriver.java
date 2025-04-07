@@ -13,13 +13,16 @@ import uniresolver.driver.Driver;
 import uniresolver.driver.did.scid.config.Configuration;
 import uniresolver.driver.did.scid.sourcemethods.SourceMethod;
 import uniresolver.driver.did.scid.sourcemethods.WebvhSourceMethod;
+import uniresolver.driver.did.scid.srcdereferencers.DidUrlSrcDereferencer;
 import uniresolver.driver.did.scid.srcdereferencers.DomainSrcDereferencer;
+import uniresolver.driver.did.scid.srcdereferencers.SidecarDereferencer;
 import uniresolver.driver.did.scid.srcdereferencers.SrcDereferencer;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -52,17 +55,29 @@ public class DidScidDriver implements Driver {
 
 		String srcValue = (String) resolutionOptions.get("src");
 		if (srcValue == null) throw new ResolutionException("invalidResolutionOptions", "Missing 'src' property");
+		if (log.isDebugEnabled()) log.debug("Determined 'src' value: {}", srcValue);
 
 		// dereference "src" value
 
-		SrcDereferencer srcDereferencer = new DomainSrcDereferencer();
+		List<SrcDereferencer> srcDereferencers = List.of(
+				new SidecarDereferencer(),
+				new DidUrlSrcDereferencer(this.getClientUniDeferencer()),
+				new DomainSrcDereferencer()
+		);
 
-        byte[] srcData;
-        try {
-            srcData = srcDereferencer.dereference(srcValue);
-        } catch (IOException ex) {
-            throw new ResolutionException("invalidResolutionOptions", "Cannot dereference 'src' resolution option ': " + ex.getMessage(), ex);
-        }
+        byte[] srcData = null;
+		for (SrcDereferencer srcDereferencer : srcDereferencers) {
+			if (! srcDereferencer.canDereference(srcValue)) continue;
+			try {
+				if (log.isDebugEnabled()) log.debug("Attempting to dereference 'src' value {} with dereferencer {}", srcValue, srcDereferencer.getClass().getSimpleName());
+				srcData = srcDereferencer.dereference(srcValue);
+				break;
+			} catch (NullPointerException | IOException ex) {
+				throw new ResolutionException("invalidResolutionOptions", "Cannot dereference 'src' resolution option with dereferencer " + srcDereferencer.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
+			}
+		}
+		if (srcData == null) throw new ResolutionException("No result from dereferencing 'src' value " + srcValue);
+		if (log.isInfoEnabled()) log.info("For 'src' value {} dereferenced {} bytes", srcValue, srcData.length);
 
         // transform to source method
 
