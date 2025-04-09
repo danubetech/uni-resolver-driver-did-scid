@@ -10,7 +10,7 @@ import uniresolver.result.DereferenceResult;
 import uniresolver.w3c.DIDURLDereferencer;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.Map;
 
 public class DidUrlSrcDereferencer implements SrcDereferencer {
 
@@ -33,15 +33,17 @@ public class DidUrlSrcDereferencer implements SrcDereferencer {
     }
 
     @Override
-    public byte[] dereference(String srcValue) throws IOException {
+    public byte[] dereference(String srcValue, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws IOException {
         byte[] srcData;
         if (log.isDebugEnabled()) log.debug("Dereferencing DID URL: {}", srcValue);
+
         try {
-            DereferenceResult dereferenceResult = this.getDidUrlDereferencer().dereference(srcValue, Collections.emptyMap());
+            DereferenceResult dereferenceResult = this.getDidUrlDereferencer().dereference(srcValue, Map.of("accept", "*/*"));
             srcData = dereferenceResult.getContent();
         } catch (ResolutionException | DereferencingException ex) {
             throw new IOException(ex.getMessage(), ex);
         }
+
         return srcData;
     }
 

@@ -16,6 +16,7 @@ import uniresolver.driver.did.scid.sourcemethods.SourceMethod;
 import uniresolver.driver.did.scid.sourcemethods.WebvhSourceMethod;
 import uniresolver.driver.did.scid.srcdereferencers.DidUrlSrcDereferencer;
 import uniresolver.driver.did.scid.srcdereferencers.DomainSrcDereferencer;
+import uniresolver.driver.did.scid.srcdereferencers.HederaUriDereferencer;
 import uniresolver.driver.did.scid.srcdereferencers.SrcDereferencer;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
@@ -56,10 +57,16 @@ public class DidScidDriver implements Driver {
 		if (srcValue == null) throw new ResolutionException("invalidResolutionOptions", "Missing 'src' property");
 		if (log.isDebugEnabled()) log.debug("Determined 'src' value: {}", srcValue);
 
+		// prepare metadata
+
+		Map<String, Object> didResolutionMetadata = new LinkedHashMap<>();
+		Map<String, Object> didDocumentMetadata = new LinkedHashMap<>();
+
 		// dereference "src" value
 
 		List<SrcDereferencer> srcDereferencers = List.of(
 				new DidUrlSrcDereferencer(this.getClientUniDeferencer()),
+				new HederaUriDereferencer(),
 				new DomainSrcDereferencer()
 		);
 
@@ -68,7 +75,7 @@ public class DidScidDriver implements Driver {
 			if (! srcDereferencer.canDereference(srcValue)) continue;
 			try {
 				if (log.isDebugEnabled()) log.debug("Attempting to dereference 'src' value {} with dereferencer {}", srcValue, srcDereferencer.getClass().getSimpleName());
-				srcData = srcDereferencer.dereference(srcValue);
+				srcData = srcDereferencer.dereference(srcValue, didResolutionMetadata, didDocumentMetadata);
 				break;
 			} catch (NullPointerException | IOException ex) {
 				throw new ResolutionException("invalidResolutionOptions", "Cannot dereference 'src' resolution option with dereferencer " + srcDereferencer.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
@@ -96,11 +103,11 @@ public class DidScidDriver implements Driver {
 			throw new ResolutionException(ResolutionException.ERROR_INVALIDDID, "Unsupported did:scid format " + format + " and version " + version);
 		}
 
-		sourceDid = sourceMethod.toSourceDID(srcData);
+		sourceDid = sourceMethod.toSourceDid(srcData, didResolutionMetadata, didDocumentMetadata);
 
 		// prepare "src" data according to source method
 
-		sourceMethod.prepareSrcData(srcValue, this.getWrapperFilesPath(), srcData);
+		sourceMethod.prepareSrcData(sourceDid, this.getWrapperFilesPath(), srcData, didResolutionMetadata, didDocumentMetadata);
 
 		// resolve source DID
 
@@ -114,15 +121,14 @@ public class DidScidDriver implements Driver {
 
 		// DID RESOLUTION METADATA
 
-		Map<String, Object> didResolutionMetadata = new LinkedHashMap<>();
 		didResolutionMetadata.put("contentType", Representations.DEFAULT_MEDIA_TYPE);
+		didResolutionMetadata.put("srcValue", srcValue);
+		didResolutionMetadata.put("sourceDid", sourceDid);
+		didResolutionMetadata.put("srcData.length", srcData.length);
 		resolveResult.getDidResolutionMetadata().putAll(didResolutionMetadata);
 
 		// DID DOCUMENT METADATA
 
-		Map<String, Object> didDocumentMetadata = new LinkedHashMap<>();
-		didDocumentMetadata.put("srcValue", srcValue);
-		didDocumentMetadata.put("sourceDid", sourceDid);
 		resolveResult.getDidDocumentMetadata().putAll(didDocumentMetadata);
 
 		// done
