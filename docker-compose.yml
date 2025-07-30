@@ -61,7 +61,7 @@ services:
       universal-resolver:
   driver-did-webvh:
     container_name: driver-did-webvh
-    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:main
+    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.4.0-1400145
     ports:
       - "10082:8080"
     environment:
@@ -75,7 +75,7 @@ services:
       - "10.3.0.2"
   driver-did-webs:
     container_name: driver-did-webs
-    image: gleif/did-webs-resolver-service:iiw37
+    image: gleif/did-webs-resolver-service:0.2.1
     ports:
       - "10083:8080"
     volumes:
