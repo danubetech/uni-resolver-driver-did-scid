@@ -11,7 +11,7 @@ This is a [Universal Resolver](https://github.com/decentralized-identity/univers
 
 ## Architecture
 
-This driver depends on other drivers of did:scid "source DID methods". The the moment, these are:
+This driver depends on other drivers of did:scid "source DID methods". At the moment, these are:
 - did:webvh driver [source](https://github.com/decentralized-identity/uni-resolver-driver-did-webvh) [image](https://github.com/decentralized-identity/uni-resolver-driver-did-webvh/pkgs/container/uni-resolver-driver-did-webvh)
 - did:webs driver [source](https://github.com/GLEIF-IT/did-webs-resolver) [image](https://hub.docker.com/r/gleif/did-webs-resolver-service)
 
