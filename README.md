@@ -38,31 +38,27 @@ This driver also depends on "?src" dereferencers, which can process values of th
    \--------------------------------------------------------------/
 ```
 
-## Example DIDs and DID URLs, and corresponding source DIDs
-
-```
- did:scid:vh:1:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p
- did:scid:vh:1:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p?src=gist.githubusercontent.com%2Fpeacekeeper%2F2a0e3e9b87819a38555273a3f2c5bd2c%2Fraw
- did:scid:vh:1:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p?src=did:cheqd:testnet:3ba8fcbb-45c8-4b20-b5a2-b4155199a1ac/resources/4c3f5d83-03f0-466f-8455-4f8d2c760ef0
- did:scid:vh:1:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p?src=hedera:testnet:0.0.5815515
- did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
- did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:peacekeeper:2a0e3e9b87819a38555273a3f2c5bd2c:raw
-```
-
-```
- did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
- did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=peacekeeper.github.io:did-webs-iiw37-tutorial
- did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=did:cheqd:testnet:3ba8fcbb-45c8-4b20-b5a2-b4155199a1ac/resources/4c3f5d83-03f0-466f-8455-4f8d2c760ef0
- did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=hedera:testnet:0.0.5815515
- did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
-```
-
 ## Build and Run (Docker)
 
 ```
 docker compose build
 docker compose up
+```
+
+## Example DIDs and DID URLs
+
+```
+curl -X GET http://localhost:8080/1.0/identifiers/did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
 curl -X GET http://localhost:8080/1.0/identifiers/did:scid:vh:1:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p?src=gist.githubusercontent.com%2Fpeacekeeper%2F2a0e3e9b87819a38555273a3f2c5bd2c%2Fraw
+curl -X GET http://localhost:8080/1.0/identifiers/did:scid:vh:1:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p?src=did:cheqd:testnet:3ba8fcbb-45c8-4b20-b5a2-b4155199a1ac/resources/4c3f5d83-03f0-466f-8455-4f8d2c760ef0
+curl -X GET http://localhost:8080/1.0/identifiers/did:scid:vh:1:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p?src=hedera:testnet:0.0.5815515
+```
+
+```
+curl -X GET http://localhost:8080/1.0/identifiers/did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
+curl -X GET http://localhost:8080/1.0/identifiers/did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=peacekeeper.github.io:did-webs-iiw37-tutorial
+curl -X GET http://localhost:8080/1.0/identifiers/did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=did:cheqd:testnet:3ba8fcbb-45c8-4b20-b5a2-b4155199a1ac/resources/4c3f5d83-03f0-466f-8455-4f8d2c760ef0
+curl -X GET http://localhost:8080/1.0/identifiers/did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=hedera:testnet:0.0.5815515
 ```
 
 ## Build (native Java)

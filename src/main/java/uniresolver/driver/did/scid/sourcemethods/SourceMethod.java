@@ -1,11 +1,28 @@
 package uniresolver.driver.did.scid.sourcemethods;
 
 import foundation.identity.did.DID;
+import uniresolver.UniResolver;
 
 import java.util.Map;
 
-public interface SourceMethod {
+public abstract class SourceMethod {
 
-    DID toSourceDid(byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata);
-    void prepareSrcData(DID sourceDid, String wrapperFilesPath, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata);
+    private final UniResolver uniResolver;
+    private final String sourceMethodName;
+
+    public SourceMethod(UniResolver uniResolver, String sourceMethodName) {
+        this.uniResolver = uniResolver;
+        this.sourceMethodName = sourceMethodName;
+    }
+
+    public UniResolver getUniResolver() {
+        return this.uniResolver;
+    }
+
+    public String getSourceMethodName() {
+        return this.sourceMethodName;
+    }
+
+    public abstract DID toSourceDid(byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata);
+    public abstract void prepareSrcData(DID sourceDid, String wrapperFilesPath, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata);
 }

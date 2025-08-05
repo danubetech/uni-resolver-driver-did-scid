@@ -5,19 +5,25 @@ import foundation.identity.did.DID;
 import foundation.identity.did.parser.ParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uniresolver.UniResolver;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-public class WebvhSourceMethod implements SourceMethod {
+public class WebvhSourceMethod extends SourceMethod {
 
     public static final String DID_SCID_FORMAT = "vh";
     public static final Integer DID_SCID_VERSION = 1;
+    public static final String SOURCE_METHOD_NAME = "webvh";
 
     private static final Logger log = LoggerFactory.getLogger(WebvhSourceMethod.class);
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    public WebvhSourceMethod(UniResolver uniResolver) {
+        super(uniResolver, SOURCE_METHOD_NAME);
+    }
 
     @Override
     public DID toSourceDid(byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {

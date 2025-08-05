@@ -62,8 +62,11 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile
-    env_file:
-      - .env.driver-did-scid
+    environment:
+      uniresolver_driver_did_scid_didResolverUri: http://uni-resolver-web:8080/1.0/
+      uniresolver_driver_did_scid_didWebvhDriverUri: http://driver-did-scid-webvh:8080/1.0/identifiers/
+      uniresolver_driver_did_scid_didWebsDriverUri: http://driver-did-scid-webvs:8080/1.0/identifiers/
+      uniresolver_driver_did_scid_wrapperFilesPath: /opt/wrapper-files/
     volumes:
       - src-web-server-html-volume:/opt/wrapper-files
     networks:
@@ -71,8 +74,8 @@ services:
         ipv4_address: 10.3.0.11
     ports:
       - "10081:8080"
-  driver-did-webvh:
-    container_name: driver-did-webvh
+  driver-did-scid-webvh:
+    container_name: driver-did-scid-webvh
     image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.4.0-1400145
     environment:
       NODE_TLS_REJECT_UNAUTHORIZED: 0
@@ -85,8 +88,8 @@ services:
       - "10.3.0.2"
     ports:
       - "10082:8080"
-  driver-did-webs:
-    container_name: driver-did-webs
+  driver-did-scid-webs:
+    container_name: driver-did-scid-webs
     image: gleif/did-webs-resolver-service:0.2.2
     volumes:
       - ./resources/driver-did-webs-config-volume/resolv.conf:/etc/resolv.conf
@@ -97,3 +100,21 @@ services:
       - "10.3.0.2"
     ports:
       - "10083:7677"
+  driver-did-webvh:
+    container_name: driver-did-webvh
+    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.4.0-1400145
+    environment:
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
+    networks:
+      driver-did-scid:
+        ipv4_address: 10.3.0.21
+    ports:
+      - "10084:8080"
+  driver-did-webs:
+    container_name: driver-did-webs
+    image: gleif/did-webs-resolver-service:0.2.2
+    networks:
+      driver-did-scid:
+        ipv4_address: 10.3.0.22
+    ports:
+      - "10085:7677"

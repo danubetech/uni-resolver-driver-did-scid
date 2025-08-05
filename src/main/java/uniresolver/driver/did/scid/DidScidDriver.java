@@ -8,20 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.DereferencingException;
 import uniresolver.ResolutionException;
-import uniresolver.client.ClientUniDereferencer;
-import uniresolver.client.ClientUniResolver;
 import uniresolver.driver.Driver;
 import uniresolver.driver.did.scid.config.Configuration;
 import uniresolver.driver.did.scid.sourcemethods.SourceMethod;
-import uniresolver.driver.did.scid.sourcemethods.WebvhSourceMethod;
-import uniresolver.driver.did.scid.srcdereferencers.DidUrlSrcDereferencer;
-import uniresolver.driver.did.scid.srcdereferencers.DomainSrcDereferencer;
-import uniresolver.driver.did.scid.srcdereferencers.HederaUriDereferencer;
 import uniresolver.driver.did.scid.srcdereferencers.SrcDereferencer;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +31,10 @@ public class DidScidDriver implements Driver {
 
 	private Map<String, Object> properties;
 
-	private ClientUniResolver clientUniResolver;
-	private ClientUniDereferencer clientUniDeferencer;
 	private String wrapperFilesPath;
+
+    private Map<String, Map<Integer, SourceMethod>> sourceMethods;
+    private List<SrcDereferencer> srcDereferencers;
 
 	public DidScidDriver() {
 		this(Configuration.getPropertiesFromEnvironment());
@@ -64,24 +60,17 @@ public class DidScidDriver implements Driver {
 
 		// dereference "src" value
 
-		List<SrcDereferencer> srcDereferencers = List.of(
-				new DidUrlSrcDereferencer(this.getClientUniDeferencer()),
-				new HederaUriDereferencer(),
-				new DomainSrcDereferencer()
-		);
+        SrcDereferencer srcDereferencer = this.getSrcDereferencers().stream().filter(x -> x.canDereference(srcValue)).findFirst().orElse(null);
+        if (srcDereferencer == null) throw new ResolutionException("No 'src' dereferencer for " + srcValue);
 
-        byte[] srcData = null;
-		for (SrcDereferencer srcDereferencer : srcDereferencers) {
-			if (! srcDereferencer.canDereference(srcValue)) continue;
-			try {
-				if (log.isDebugEnabled()) log.debug("Attempting to dereference 'src' value {} with dereferencer {}", srcValue, srcDereferencer.getClass().getSimpleName());
-				srcData = srcDereferencer.dereference(srcValue, didResolutionMetadata, didDocumentMetadata);
-				break;
-			} catch (NullPointerException | IOException ex) {
-				throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Cannot dereference 'src' resolution option with dereferencer " + srcDereferencer.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
-			}
-		}
-		if (srcData == null) throw new ResolutionException("No result from dereferencing 'src' value " + srcValue);
+        byte[] srcData;
+        try {
+            if (log.isDebugEnabled()) log.debug("Attempting to dereference 'src' value {} with dereferencer {}", srcValue, srcDereferencer.getClass().getSimpleName());
+            srcData = srcDereferencer.dereference(srcValue, didResolutionMetadata, didDocumentMetadata);
+        } catch (NullPointerException | IOException ex) {
+            throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Cannot dereference 'src' resolution option with dereferencer " + srcDereferencer.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
+        }
+		if (srcData == null) throw new ResolutionException("No result from dereferencing 'src' value using 'src' dereferencer " + srcDereferencer.getClass().getSimpleName() + ": " + srcValue);
 		if (log.isInfoEnabled()) log.info("For 'src' value {} dereferenced {} bytes", srcValue, srcData.length);
 
         // transform to source DID
@@ -94,16 +83,11 @@ public class DidScidDriver implements Driver {
 		Integer version = Integer.parseInt(matcher.group(2));
 		String scid = matcher.group(3);
 
-		SourceMethod sourceMethod;
-		DID sourceDid;
+        SourceMethod sourceMethod = this.getSourceMethods().getOrDefault(format, Collections.emptyMap()).get(version);
+		if (sourceMethod == null) throw new ResolutionException(ResolutionException.ERROR_INVALID_DID, "Unsupported did:scid format " + format + " and version " + version);
 
-		if (WebvhSourceMethod.DID_SCID_FORMAT.equals(format) && WebvhSourceMethod.DID_SCID_VERSION.equals(version)) {
-			sourceMethod = new WebvhSourceMethod();
-		} else {
-			throw new ResolutionException(ResolutionException.ERROR_INVALID_DID, "Unsupported did:scid format " + format + " and version " + version);
-		}
-
-		sourceDid = sourceMethod.toSourceDid(srcData, didResolutionMetadata, didDocumentMetadata);
+		DID sourceDid = sourceMethod.toSourceDid(srcData, didResolutionMetadata, didDocumentMetadata);
+        if (! sourceMethod.getSourceMethodName().equals(sourceDid.getMethodName())) throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Unexpected DID method in 'src' data: " + sourceDid.getMethodName() + " (expected: " + sourceMethod.getSourceMethodName() + ")");
 
 		// prepare "src" data according to source method
 
@@ -111,7 +95,7 @@ public class DidScidDriver implements Driver {
 
 		// resolve source DID
 
-		ResolveResult resolveResult = this.getClientUniResolver().resolve(sourceDid.toString());
+		ResolveResult resolveResult = sourceMethod.getUniResolver().resolve(sourceDid.toString());
 
 		// adjust source DID in DID document
 
@@ -122,6 +106,11 @@ public class DidScidDriver implements Driver {
 		// DID RESOLUTION METADATA
 
 		didResolutionMetadata.put("contentType", Representations.DEFAULT_MEDIA_TYPE);
+        didResolutionMetadata.put("format", format);
+        didResolutionMetadata.put("version", version);
+        didResolutionMetadata.put("scid", scid);
+        didResolutionMetadata.put("sourceMethod", sourceMethod.getClass().getSimpleName());
+        didResolutionMetadata.put("srcDereferencer", srcDereferencer.getClass().getSimpleName());
 		didResolutionMetadata.put("srcValue", srcValue);
 		didResolutionMetadata.put("sourceDid", sourceDid);
 		didResolutionMetadata.put("srcData.length", srcData.length);
@@ -158,22 +147,6 @@ public class DidScidDriver implements Driver {
 		this.properties = properties;
 		Configuration.configureFromProperties(this, properties);
 	}
-
-	public ClientUniResolver getClientUniResolver() {
-		return this.clientUniResolver;
-	}
-
-	public void setClientUniResolver(ClientUniResolver clientUniResolver) {
-		this.clientUniResolver = clientUniResolver;
-	}
-
-	public ClientUniDereferencer getClientUniDeferencer() {
-		return this.clientUniDeferencer;
-	}
-
-	public void setClientUniDeferencer(ClientUniDereferencer clientUniDeferencer) {
-		this.clientUniDeferencer = clientUniDeferencer;
-	}
 	public String getWrapperFilesPath() {
 		return this.wrapperFilesPath;
 	}
@@ -181,4 +154,20 @@ public class DidScidDriver implements Driver {
 	public void setWrapperFilesPath(String wrapperFilesPath) {
 		this.wrapperFilesPath = wrapperFilesPath;
 	}
+
+    public Map<String, Map<Integer, SourceMethod>> getSourceMethods() {
+        return this.sourceMethods;
+    }
+
+    public void setSourceMethods(Map<String, Map<Integer, SourceMethod>> sourceMethods) {
+        this.sourceMethods = sourceMethods;
+    }
+
+    public List<SrcDereferencer> getSrcDereferencers() {
+        return this.srcDereferencers;
+    }
+
+    public void setSrcDereferencers(List<SrcDereferencer> srcDereferencers) {
+        this.srcDereferencers = srcDereferencers;
+    }
 }
