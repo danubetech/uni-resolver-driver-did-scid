@@ -62,7 +62,7 @@ This driver also depends on "?src" dereferencers, which can process values of th
 ```
 docker compose build
 docker compose up
-curl -X GET http://localhost:8080/1.0/identifiers/did:scid:TODO
+curl -X GET http://localhost:8080/1.0/identifiers/did:scid:vh:1:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p?src=gist.githubusercontent.com%2Fpeacekeeper%2F2a0e3e9b87819a38555273a3f2c5bd2c%2Fraw
 ```
 
 ## Build (native Java)

@@ -1,0 +1,31 @@
+server:
+  servlet:
+    contextPath: /
+    mappings:
+      properties: "/1.0/properties"
+      resolve: "/1.0/identifiers"
+      methods: "/1.0/methods"
+      testIdentifiers: "/1.0/testIdentifiers"
+      traits: "/1.0/traits"
+  port: "8080"
+
+spring:
+  profiles:
+    active: ${uniresolver_web_spring_profiles_active:default}
+
+uniresolver:
+  drivers:
+    - pattern: "^(did:scid:.+)$"
+      url: http://driver-did-scid:8080/
+      supportsOptions: true
+      testIdentifiers:
+        - did:scid:vh:1:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p
+    - pattern: "^(did:webvh:.+)$"
+      url: http://driver-did-webvh:8080/
+      testIdentifiers:
+        - did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
+        - did:webvh:QmVJ5nUYb9iugnUz4yDfbe8UFbhmnsvS2EAzSpSfPScRAn:opsecid.github.io
+    - pattern: "^(did:webs:.+)$"
+      url: http://driver-did-webs:7677/
+      testIdentifiers:
+        - did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP

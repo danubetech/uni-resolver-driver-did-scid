@@ -54,7 +54,7 @@ public class DidScidDriver implements Driver {
 		// parse resolution options
 
 		String srcValue = (String) resolutionOptions.get("src");
-		if (srcValue == null) throw new ResolutionException("invalidResolutionOptions", "Missing 'src' property");
+		if (srcValue == null) throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Missing 'src' resolution option");
 		if (log.isDebugEnabled()) log.debug("Determined 'src' value: {}", srcValue);
 
 		// prepare metadata
@@ -78,7 +78,7 @@ public class DidScidDriver implements Driver {
 				srcData = srcDereferencer.dereference(srcValue, didResolutionMetadata, didDocumentMetadata);
 				break;
 			} catch (NullPointerException | IOException ex) {
-				throw new ResolutionException("invalidResolutionOptions", "Cannot dereference 'src' resolution option with dereferencer " + srcDereferencer.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
+				throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Cannot dereference 'src' resolution option with dereferencer " + srcDereferencer.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
 			}
 		}
 		if (srcData == null) throw new ResolutionException("No result from dereferencing 'src' value " + srcValue);
