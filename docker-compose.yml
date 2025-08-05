@@ -7,8 +7,6 @@ volumes:
       o: "rw"
 
 networks:
-  universal-resolver:
-    external: true
   driver-did-scid:
     driver: bridge
     ipam:
@@ -55,13 +53,12 @@ services:
     ports:
       - "10081:8080"
     environment:
-      uniresolver_driver_did_scid_didResolverUri: https://dev.uniresolver.io/1.0/
-      uniresolver_driver_did_scid_wrapperFilesPath: /opt/wrapper-files/
+      uniresolver_driver_did_scid_didResolverUri: ${uniresolver_driver_did_scid_didResolverUri}
+      uniresolver_driver_did_scid_wrapperFilesPath: ${uniresolver_driver_did_scid_wrapperFilesPath}
     volumes:
       - src-web-server-html-volume:/opt/wrapper-files
     networks:
       driver-did-scid:
-      universal-resolver:
   driver-did-webvh:
     container_name: driver-did-webvh
     image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.4.0-1400145
@@ -73,18 +70,16 @@ services:
       - ./resources/driver-did-webvh-config-volume/resolv.conf:/etc/resolv.conf
     networks:
       driver-did-scid:
-      universal-resolver:
     dns:
       - "10.3.0.2"
   driver-did-webs:
     container_name: driver-did-webs
-    image: gleif/did-webs-resolver-service:0.2.1
+    image: gleif/did-webs-resolver-service:0.2.2
     ports:
       - "10083:8080"
     volumes:
       - ./resources/driver-did-webs-config-volume/resolv.conf:/etc/resolv.conf
     networks:
       driver-did-scid:
-      universal-resolver:
     dns:
       - "10.3.0.2"
