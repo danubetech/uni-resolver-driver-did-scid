@@ -88,7 +88,7 @@ public class DidScidDriver implements Driver {
 
 		Matcher matcher = DID_SCID_PATTERN.matcher(identifier.toString());
 		if (! matcher.matches()) {
-			throw new ResolutionException(ResolutionException.ERROR_INVALIDDID, "Not a valid did:scid: " + identifier);
+			throw new ResolutionException(ResolutionException.ERROR_INVALID_DID, "Not a valid did:scid: " + identifier);
 		}
 		String format = matcher.group(1);
 		Integer version = Integer.parseInt(matcher.group(2));
@@ -100,7 +100,7 @@ public class DidScidDriver implements Driver {
 		if (WebvhSourceMethod.DID_SCID_FORMAT.equals(format) && WebvhSourceMethod.DID_SCID_VERSION.equals(version)) {
 			sourceMethod = new WebvhSourceMethod();
 		} else {
-			throw new ResolutionException(ResolutionException.ERROR_INVALIDDID, "Unsupported did:scid format " + format + " and version " + version);
+			throw new ResolutionException(ResolutionException.ERROR_INVALID_DID, "Unsupported did:scid format " + format + " and version " + version);
 		}
 
 		sourceDid = sourceMethod.toSourceDid(srcData, didResolutionMetadata, didDocumentMetadata);
