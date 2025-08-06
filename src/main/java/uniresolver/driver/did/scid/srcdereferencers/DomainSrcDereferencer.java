@@ -9,6 +9,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
@@ -22,18 +23,20 @@ public class DomainSrcDereferencer implements SrcDereferencer {
     }
 
     @Override
-    public byte[] dereference(String srcValue, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws IOException {
-        byte[] srcData;
-        URL url = URI.create("https://" + srcValue).toURL();
-        if (log.isDebugEnabled()) log.debug("Dereferencing URI: {}", url);
-        didResolutionMetadata.put("srcValue.url", url);
+    public byte[] dereference(String srcValue, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws IOException, URISyntaxException {
 
+        byte[] srcData;
+
+        URL url = new URI("https://" + srcValue).toURL();
+
+        if (log.isDebugEnabled()) log.debug("Dereferencing URI: {}", url);
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(url.openStream());) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             IOUtils.copy(bufferedInputStream, byteArrayOutputStream);
             srcData = byteArrayOutputStream.toByteArray();
         }
 
+        didResolutionMetadata.put("srcValue.url", url);
         return srcData;
     }
 }

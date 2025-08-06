@@ -26,7 +26,7 @@ public class WebvhSourceMethod extends SourceMethod {
     }
 
     @Override
-    public DID toSourceDid(byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
+    public DID toSourceDid(String scid, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws ParserException {
         Map<String, Object> initialLineMap;
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(srcData)) {
             try (InputStreamReader inputStreamReader = new InputStreamReader(byteArrayInputStream, StandardCharsets.UTF_8)) {
@@ -40,12 +40,8 @@ public class WebvhSourceMethod extends SourceMethod {
         Map<String, Object> stateMap = initialLineMap == null ? null : (Map<String, Object>) initialLineMap.get("state");
         String id = stateMap == null ? null : (String) stateMap.get("id");
         if (id == null) throw new IllegalArgumentException("No 'id' found in initial line: " + initialLineMap);
-        DID sourceDid;
-        try {
-            sourceDid = DID.fromString(id);
-        } catch (ParserException ex) {
-            throw new RuntimeException(ex);
-        }
+        if (! id.startsWith("did:webvh:" + scid)) throw new IllegalArgumentException("No 'scid' " + scid + " found in 'id': " + id);
+        DID sourceDid = DID.fromString(id);
         if (log.isInfoEnabled()) log.info("For 'srcData' {}: {}", srcData.length, sourceDid);
         return sourceDid;
     }

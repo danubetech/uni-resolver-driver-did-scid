@@ -7,8 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uniresolver.UniResolver;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 public class WebsSourceMethod extends SourceMethod {
@@ -26,23 +27,10 @@ public class WebsSourceMethod extends SourceMethod {
     }
 
     @Override
-    public DID toSourceDid(byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
-        Map<String, Object> initialLineMap;
-        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(srcData)) {
-            try (InputStreamReader inputStreamReader = new InputStreamReader(byteArrayInputStream, StandardCharsets.UTF_8)) {
-                try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader)) {
-                    initialLineMap = objectMapper.readValue(bufferedReader.readLine(), Map.class);
-                }
-            }
-        } catch (IOException ex) {
-            throw new RuntimeException(new RuntimeException());
-        }
-        Map<String, Object> stateMap = initialLineMap == null ? null : (Map<String, Object>) initialLineMap.get("state");
-        String id = stateMap == null ? null : (String) stateMap.get("id");
-        if (id == null) throw new IllegalArgumentException("No 'id' found in initial line: " + initialLineMap);
+    public DID toSourceDid(String scid, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
         DID sourceDid;
         try {
-            sourceDid = DID.fromString(id);
+            sourceDid = DID.fromString("did:webs:dummy.com:" + scid);
         } catch (ParserException ex) {
             throw new RuntimeException(ex);
         }
@@ -53,7 +41,7 @@ public class WebsSourceMethod extends SourceMethod {
     @Override
     public void prepareSrcData(DID sourceDid, String wrapperFilesPath, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
         String pathString = wrapperFilesPath;
-        String didDomainAndPathString = sourceDid.getMethodSpecificId().substring(sourceDid.getMethodSpecificId().indexOf(":") + 1);
+        String didDomainAndPathString = sourceDid.getMethodSpecificId().substring(0, sourceDid.getMethodSpecificId().indexOf(":") + 1);
         String didPathString = didDomainAndPathString.substring(didDomainAndPathString.indexOf(":") + 1);
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didPathString {}", sourceDid, didPathString);
         String sourceDidPathString = didPathString.replace(":", "/");

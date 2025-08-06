@@ -34,6 +34,7 @@ public class DidUrlSrcDereferencer implements SrcDereferencer {
 
     @Override
     public byte[] dereference(String srcValue, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws IOException {
+
         byte[] srcData;
         if (log.isDebugEnabled()) log.debug("Dereferencing DID URL: {}", srcValue);
 

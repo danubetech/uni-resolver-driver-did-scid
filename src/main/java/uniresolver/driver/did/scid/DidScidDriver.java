@@ -15,7 +15,6 @@ import uniresolver.driver.did.scid.srcdereferencers.SrcDereferencer;
 import uniresolver.result.DereferenceResult;
 import uniresolver.result.ResolveResult;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -67,33 +66,45 @@ public class DidScidDriver implements Driver {
         try {
             if (log.isDebugEnabled()) log.debug("Attempting to dereference 'src' value {} with dereferencer {}", srcValue, srcDereferencer.getClass().getSimpleName());
             srcData = srcDereferencer.dereference(srcValue, didResolutionMetadata, didDocumentMetadata);
-        } catch (NullPointerException | IOException ex) {
-            throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Cannot dereference 'src' resolution option with dereferencer " + srcDereferencer.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
+        } catch (Exception ex) {
+            throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Cannot dereference 'src' resolution option " + srcValue + " with dereferencer " + srcDereferencer.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
         }
 		if (srcData == null) throw new ResolutionException("No result from dereferencing 'src' value using 'src' dereferencer " + srcDereferencer.getClass().getSimpleName() + ": " + srcValue);
 		if (log.isInfoEnabled()) log.info("For 'src' value {} dereferenced {} bytes", srcValue, srcData.length);
 
-        // transform to source DID
+        // parse did:scid
 
 		Matcher matcher = DID_SCID_PATTERN.matcher(identifier.toString());
 		if (! matcher.matches()) {
 			throw new ResolutionException(ResolutionException.ERROR_INVALID_DID, "Not a valid did:scid: " + identifier);
 		}
+
 		String format = matcher.group(1);
 		Integer version = Integer.parseInt(matcher.group(2));
 		String scid = matcher.group(3);
 
+        // transform to source DID
+
         SourceMethod sourceMethod = this.getSourceMethods().getOrDefault(format, Collections.emptyMap()).get(version);
 		if (sourceMethod == null) throw new ResolutionException(ResolutionException.ERROR_INVALID_DID, "Unsupported did:scid format " + format + " and version " + version);
 
-		DID sourceDid = sourceMethod.toSourceDid(srcData, didResolutionMetadata, didDocumentMetadata);
-        if (! sourceMethod.getSourceMethodName().equals(sourceDid.getMethodName())) throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Unexpected DID method in 'src' data: " + sourceDid.getMethodName() + " (expected: " + sourceMethod.getSourceMethodName() + ")");
+        DID sourceDid;
+        try {
+            sourceDid = sourceMethod.toSourceDid(scid, srcData, didResolutionMetadata, didDocumentMetadata);
+        } catch (Exception ex) {
+            throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Cannot determine source DID " + srcValue + " with source method " + sourceMethod.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
+        }
+        if (! sourceMethod.getSourceMethodName().equals(sourceDid.getMethodName())) throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Unexpected source DID method" + sourceDid.getMethodName() + " (expected: " + sourceMethod.getSourceMethodName() + ")");
 
 		// prepare "src" data according to source method
 
-		sourceMethod.prepareSrcData(sourceDid, this.getWrapperFilesPath(), srcData, didResolutionMetadata, didDocumentMetadata);
+        try {
+            sourceMethod.prepareSrcData(sourceDid, this.getWrapperFilesPath(), srcData, didResolutionMetadata, didDocumentMetadata);
+        } catch (Exception ex) {
+            throw new ResolutionException(ResolutionException.ERROR_INVALID_OPTIONS, "Cannot prepare 'src' data for source DID " + sourceDid + " with source method " + sourceMethod.getClass().getSimpleName() + ": " + ex.getMessage(), ex);
+        }
 
-		// resolve source DID
+        // resolve source DID
 
 		ResolveResult resolveResult = sourceMethod.getUniResolver().resolve(sourceDid.toString());
 
