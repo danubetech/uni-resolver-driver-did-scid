@@ -53,7 +53,7 @@ public class WebsSourceMethod extends SourceMethod {
         didResolutionMetadata.put("srcData.path", path);
         boolean mkdir = path.mkdirs();
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: mkdir {}", sourceDid, mkdir);
-        File file = new File(path, "/did.cesr");
+        File file = new File(path, "/keri.cesr");
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: file {}", sourceDid, file);
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             fileOutputStream.write(srcData);
