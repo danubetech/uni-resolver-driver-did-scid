@@ -50,6 +50,7 @@ public class WebvhSourceMethod extends SourceMethod {
     public void prepareSrcData(DID sourceDid, String wrapperFilesPath, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
         String pathString = wrapperFilesPath;
         String didDomainAndPathString = sourceDid.getMethodSpecificId().substring(sourceDid.getMethodSpecificId().indexOf(":") + 1);
+        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didDomainAndPathString {}", sourceDid, didDomainAndPathString);
         String didPathString = didDomainAndPathString.substring(didDomainAndPathString.indexOf(":") + 1);
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didPathString {}", sourceDid, didPathString);
         String sourceDidPathString = didPathString.replace(":", "/");
