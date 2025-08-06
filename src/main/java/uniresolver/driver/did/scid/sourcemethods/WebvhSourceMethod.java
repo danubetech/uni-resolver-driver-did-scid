@@ -1,6 +1,5 @@
 package uniresolver.driver.did.scid.sourcemethods;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DID;
 import foundation.identity.did.parser.ParserException;
@@ -27,7 +26,7 @@ public class WebvhSourceMethod extends SourceMethod {
     }
 
     @Override
-    public DID toSourceDid(String scid, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws ParserException {
+    public DID toSourceDid(String scid, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws ParserException, IOException {
         Map<String, Object> initialLineMap;
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(srcData)) {
             try (InputStreamReader inputStreamReader = new InputStreamReader(byteArrayInputStream, StandardCharsets.UTF_8)) {
@@ -35,8 +34,6 @@ public class WebvhSourceMethod extends SourceMethod {
                     initialLineMap = objectMapper.readValue(bufferedReader.readLine(), Map.class);
                 }
             }
-        } catch (IOException ex) {
-            throw new RuntimeException(new RuntimeException());
         }
         Map<String, Object> stateMap = initialLineMap == null ? null : (Map<String, Object>) initialLineMap.get("state");
         String id = stateMap == null ? null : (String) stateMap.get("id");
@@ -48,7 +45,7 @@ public class WebvhSourceMethod extends SourceMethod {
     }
 
     @Override
-    public void prepareSrcData(DID sourceDid, String wrapperFilesPath, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws JsonProcessingException {
+    public void prepareSrcData(DID sourceDid, String wrapperFilesPath, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws IOException {
 
         String basePath = wrapperFilesPath;
         if (! basePath.endsWith("/")) basePath += "/";
@@ -64,7 +61,7 @@ public class WebvhSourceMethod extends SourceMethod {
         boolean mkdir = path.mkdirs();
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: mkdir {}", sourceDid, mkdir);
 
-        String srcDataDidJsonl = objectMapper.writeValueAsString(srcData);
+        String srcDataDidJsonl = objectMapper.writeValueAsString(objectMapper.readValue(srcData, Map.class));
 
         File fileDidJsonl = new File(path, "/did.jsonl");
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: fileDidJsonl {}", sourceDid, fileDidJsonl);

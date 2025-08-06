@@ -30,7 +30,7 @@ public class WebsSourceMethod extends SourceMethod {
     public DID toSourceDid(String scid, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
         DID sourceDid;
         try {
-            sourceDid = DID.fromString("did:webs:dummy.com:" + scid);
+            sourceDid = DID.fromString("did:webs:src-web-server:" + scid);
         } catch (ParserException ex) {
             throw new RuntimeException(ex);
         }
@@ -58,6 +58,8 @@ public class WebsSourceMethod extends SourceMethod {
         Map<String, Object> srcMap = objectMapper.readValue(srcData, Map.class);
         Map<String, Object> srcDidJsonMap = (Map<String, Object>) srcMap.computeIfAbsent("did.json", x -> { throw new IllegalArgumentException("No \"did.json\" property found in 'src' data."); });
         String srcDataDidJsonValue = objectMapper.writeValueAsString(srcDidJsonMap);
+        srcDataDidJsonValue = srcDataDidJsonValue.replace((String) srcDidJsonMap.get("id"), sourceDid.toString());
+
         String srcDataKeriCesrValue = (String) srcMap.computeIfAbsent("keri.cesr", x -> { throw new IllegalArgumentException("No \"keri.cesr\" property found in 'src' data."); });
 
         File fileDidJson = new File(path, "/did.json");

@@ -77,6 +77,7 @@ public class Configuration {
             HttpDriver didWebsDriver = new HttpDriver();
             didWebsDriver.setPattern("^(did:webs:.+)$");
             didWebsDriver.setResolveUri(URI.create(prop_didWebsDriverUri));
+            didWebsDriver.setAcceptHeaderValue("");
 
             // parse wrapperFilesPath
 
