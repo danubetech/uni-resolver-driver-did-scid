@@ -1,5 +1,6 @@
 package uniresolver.driver.did.scid.sourcemethods;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foundation.identity.did.DID;
 import foundation.identity.did.parser.ParserException;
@@ -47,27 +48,32 @@ public class WebvhSourceMethod extends SourceMethod {
     }
 
     @Override
-    public void prepareSrcData(DID sourceDid, String wrapperFilesPath, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
-        String pathString = wrapperFilesPath;
-        String didDomainAndPathString = sourceDid.getMethodSpecificId().substring(sourceDid.getMethodSpecificId().indexOf(":") + 1);
-        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didDomainAndPathString {}", sourceDid, didDomainAndPathString);
-        String didPathString = didDomainAndPathString.substring(didDomainAndPathString.indexOf(":") + 1);
-        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didPathString {}", sourceDid, didPathString);
-        String sourceDidPathString = didPathString.replace(":", "/");
-        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: sourceDidPathString {}", sourceDid, sourceDidPathString);
-        if (! pathString.endsWith("/")) pathString += "/";
-        if (! sourceDidPathString.endsWith("/")) sourceDidPathString += "/";
-        File path = new File(pathString + sourceDidPathString);
+    public void prepareSrcData(DID sourceDid, String wrapperFilesPath, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws JsonProcessingException {
+
+        String basePath = wrapperFilesPath;
+        if (! basePath.endsWith("/")) basePath += "/";
+
+        String didDomainAndPath = sourceDid.getMethodSpecificId().substring(sourceDid.getMethodSpecificId().indexOf(":") + 1).replace(":", "/");
+        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didDomainAndPath {}", sourceDid, didDomainAndPath);
+        String didPath = didDomainAndPath.substring(didDomainAndPath.indexOf("/") + 1);
+        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didPath {}", sourceDid, didPath);
+        if (! didPath.endsWith("/")) didPath += "/";
+
+        File path = new File(basePath + didPath);
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: path {}", sourceDid, path);
-        didResolutionMetadata.put("srcData.path", path);
         boolean mkdir = path.mkdirs();
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: mkdir {}", sourceDid, mkdir);
-        File file = new File(path, "/did.jsonl");
-        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: file {}", sourceDid, file);
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            fileOutputStream.write(srcData);
+
+        String srcDataDidJsonl = objectMapper.writeValueAsString(srcData);
+
+        File fileDidJsonl = new File(path, "/did.jsonl");
+        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: fileDidJsonl {}", sourceDid, fileDidJsonl);
+        try (FileWriter fileWriter = new FileWriter(fileDidJsonl)) {
+            fileWriter.write(srcDataDidJsonl);
         } catch (IOException ex) {
-            throw new RuntimeException("Cannot write file " + file + ": " + ex.getMessage(), ex);
+            throw new RuntimeException("Cannot write fileDidJsonl " + fileDidJsonl + ": " + ex.getMessage(), ex);
         }
+
+        didResolutionMetadata.put("src.path", path);
     }
 }

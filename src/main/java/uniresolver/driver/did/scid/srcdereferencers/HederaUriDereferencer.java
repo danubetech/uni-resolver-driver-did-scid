@@ -35,8 +35,6 @@ public class HederaUriDereferencer implements SrcDereferencer {
         String hederaNetwork = matcher.group(1);
         String hederaTopicId = matcher.group(2);
         if (log.isDebugEnabled()) log.debug("Dereferencing Hedera URI: {} and {}", hederaNetwork, hederaTopicId);
-        didResolutionMetadata.put("srcValue.hedera.network", hederaNetwork);
-        didResolutionMetadata.put("srcValue.hedera.topicId", hederaTopicId);
 
         Client client = Client.forName(hederaNetwork);
         try {
@@ -67,12 +65,14 @@ public class HederaUriDereferencer implements SrcDereferencer {
             throw new RuntimeException(ex.getMessage(), ex);
         }
         subscriptionHandle.unsubscribe();
-        didResolutionMetadata.put("srcValue.hedera.transactionId", topicMessage.transactionId.toString());
-        didResolutionMetadata.put("srcValue.hedera.sequenceNumber", topicMessage.sequenceNumber);
-        didResolutionMetadata.put("srcValue.hedera.consensusTimestamp", topicMessage.consensusTimestamp.toString());
-        didResolutionMetadata.put("srcValue.hedera.runningHash", Hex.encodeHexString(topicMessage.runningHash));
-        didResolutionMetadata.put("srcValue.hedera.chunks.length", Arrays.asList(topicMessage.chunks).size());
 
+        didResolutionMetadata.put("src.hedera.network", hederaNetwork);
+        didResolutionMetadata.put("src.hedera.topicId", hederaTopicId);
+        didResolutionMetadata.put("src.hedera.transactionId", topicMessage.transactionId.toString());
+        didResolutionMetadata.put("src.hedera.sequenceNumber", topicMessage.sequenceNumber);
+        didResolutionMetadata.put("src.hedera.consensusTimestamp", topicMessage.consensusTimestamp.toString());
+        didResolutionMetadata.put("src.hedera.runningHash", Hex.encodeHexString(topicMessage.runningHash));
+        didResolutionMetadata.put("src.hedera.chunks.length", Arrays.asList(topicMessage.chunks).size());
         return stringBuffer.toString().getBytes(StandardCharsets.UTF_8);
     }
 }

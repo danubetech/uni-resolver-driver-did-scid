@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import uniresolver.UniResolver;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 
@@ -39,27 +39,43 @@ public class WebsSourceMethod extends SourceMethod {
     }
 
     @Override
-    public void prepareSrcData(DID sourceDid, String wrapperFilesPath, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) {
-        String pathString = wrapperFilesPath;
-        String didDomainAndPathString = sourceDid.getMethodSpecificId();
-        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didDomainAndPathString {}", sourceDid, didDomainAndPathString);
-        String didPathString = didDomainAndPathString.substring(didDomainAndPathString.indexOf(":") + 1);
-        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didPathString {}", sourceDid, didPathString);
-        String sourceDidPathString = didPathString.replace(":", "/");
-        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: sourceDidPathString {}", sourceDid, sourceDidPathString);
-        if (! pathString.endsWith("/")) pathString += "/";
-        if (! sourceDidPathString.endsWith("/")) sourceDidPathString += "/";
-        File path = new File(pathString + sourceDidPathString);
+    public void prepareSrcData(DID sourceDid, String wrapperFilesPath, byte[] srcData, Map<String, Object> didResolutionMetadata, Map<String, Object> didDocumentMetadata) throws IOException {
+
+        String basePath = wrapperFilesPath;
+        if (! basePath.endsWith("/")) basePath += "/";
+
+        String didDomainAndPath = sourceDid.getMethodSpecificId().replace(":", "/");
+        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didDomainAndPath {}", sourceDid, didDomainAndPath);
+        String didPath = didDomainAndPath.substring(didDomainAndPath.indexOf("/") + 1);
+        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didPath {}", sourceDid, didPath);
+        if (! didPath.endsWith("/")) didPath += "/";
+
+        File path = new File(basePath + didPath);
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: path {}", sourceDid, path);
-        didResolutionMetadata.put("srcData.path", path);
         boolean mkdir = path.mkdirs();
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: mkdir {}", sourceDid, mkdir);
-        File file = new File(path, "/keri.cesr");
-        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: file {}", sourceDid, file);
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            fileOutputStream.write(srcData);
+
+        Map<String, Object> srcMap = objectMapper.readValue(srcData, Map.class);
+        Map<String, Object> srcDidJsonMap = (Map<String, Object>) srcMap.computeIfAbsent("did.json", x -> { throw new IllegalArgumentException("No \"did.json\" property found in 'src' data."); });
+        String srcDataDidJsonValue = objectMapper.writeValueAsString(srcDidJsonMap);
+        String srcDataKeriCesrValue = (String) srcMap.computeIfAbsent("keri.cesr", x -> { throw new IllegalArgumentException("No \"keri.cesr\" property found in 'src' data."); });
+
+        File fileDidJson = new File(path, "/did.json");
+        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: fileDidJson {}", sourceDid, fileDidJson);
+        try (FileWriter fileWriter = new FileWriter(fileDidJson)) {
+            fileWriter.write(srcDataDidJsonValue);
         } catch (IOException ex) {
-            throw new RuntimeException("Cannot write file " + file + ": " + ex.getMessage(), ex);
+            throw new RuntimeException("Cannot write fileDidJson " + fileDidJson + ": " + ex.getMessage(), ex);
         }
+
+        File fileKeriCesr = new File(path, "/keri.cesr");
+        if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: fileKeriCesr {}", sourceDid, fileKeriCesr);
+        try (FileWriter fileWriter = new FileWriter(fileKeriCesr)) {
+            fileWriter.write(srcDataKeriCesrValue);
+        } catch (IOException ex) {
+            throw new RuntimeException("Cannot write fileKeriCesr " + fileKeriCesr + ": " + ex.getMessage(), ex);
+        }
+
+        didResolutionMetadata.put("src.path", path);
     }
 }

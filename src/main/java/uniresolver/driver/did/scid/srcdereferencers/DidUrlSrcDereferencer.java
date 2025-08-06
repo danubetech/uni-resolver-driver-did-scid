@@ -45,6 +45,7 @@ public class DidUrlSrcDereferencer implements SrcDereferencer {
             throw new IOException(ex.getMessage(), ex);
         }
 
+        didResolutionMetadata.put("src.didUrl", srcValue);
         return srcData;
     }
 

@@ -36,7 +36,7 @@ public class DomainSrcDereferencer implements SrcDereferencer {
             srcData = byteArrayOutputStream.toByteArray();
         }
 
-        didResolutionMetadata.put("srcValue.url", url);
+        didResolutionMetadata.put("src.url", url);
         return srcData;
     }
 }
