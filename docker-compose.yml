@@ -65,7 +65,7 @@ services:
     environment:
       uniresolver_driver_did_scid_didResolverUri: http://uni-resolver-web:8080/1.0/
       uniresolver_driver_did_scid_didWebvhDriverUri: http://driver-did-scid-webvh:8080/1.0/identifiers/
-      uniresolver_driver_did_scid_didWebsDriverUri: http://driver-did-scid-webvs:8080/1.0/identifiers/
+      uniresolver_driver_did_scid_didWebsDriverUri: http://driver-did-scid-webs:7677/1.0/identifiers/
       uniresolver_driver_did_scid_wrapperFilesPath: /opt/wrapper-files/
     volumes:
       - src-web-server-html-volume:/opt/wrapper-files
