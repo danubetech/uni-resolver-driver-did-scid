@@ -78,9 +78,11 @@ services:
     container_name: driver-did-scid-webvh
     image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.4.0-1400145
     environment:
+      NODE_EXTRA_CA_CERTS: /opt/config/certs/nginx-selfsigned.crt
       NODE_TLS_REJECT_UNAUTHORIZED: 0
     volumes:
-      - ./resources/driver-did-webvh-config-volume/resolv.conf:/etc/resolv.conf
+      - ./resources/driver-did-scid-webvh-config-volume/resolv.conf:/etc/resolv.conf
+      - ./resources/driver-did-scid-webvh-config-volume/nginx-selfsigned.crt:/opt/config/certs/nginx-selfsigned.crt
     networks:
       driver-did-scid:
         ipv4_address: 10.3.0.12
@@ -90,9 +92,14 @@ services:
       - "10082:8080"
   driver-did-scid-webs:
     container_name: driver-did-scid-webs
-    image: gleif/did-webs-resolver-service:0.2.2
+    image: gleif/did-webs-resolver-service:0.2.6
+    environment:
+      SSL_CERT_DIR: /opt/config/certs/nginx-selfsigned.crt
+      REQUESTS_CA_BUNDLE: ""
+      CURL_CA_BUNDLE: ""
     volumes:
-      - ./resources/driver-did-webs-config-volume/resolv.conf:/etc/resolv.conf
+      - ./resources/driver-did-scid-webs-config-volume/resolv.conf:/etc/resolv.conf
+      - ./resources/driver-did-scid-webvh-config-volume/nginx-selfsigned.crt:/opt/config/certs/nginx-selfsigned.crt
     networks:
       driver-did-scid:
         ipv4_address: 10.3.0.13
@@ -112,7 +119,7 @@ services:
       - "10084:8080"
   driver-did-webs:
     container_name: driver-did-webs
-    image: gleif/did-webs-resolver-service:0.2.2
+    image: gleif/did-webs-resolver-service:0.2.6
     networks:
       driver-did-scid:
         ipv4_address: 10.3.0.22

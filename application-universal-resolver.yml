@@ -27,5 +27,6 @@ uniresolver:
         - did:webvh:QmVJ5nUYb9iugnUz4yDfbe8UFbhmnsvS2EAzSpSfPScRAn:opsecid.github.io
     - pattern: "^(did:webs:.+)$"
       url: http://driver-did-webs:7677/
+      acceptHeaderValue:
       testIdentifiers:
         - did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
