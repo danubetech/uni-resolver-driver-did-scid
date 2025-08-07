@@ -15,35 +15,6 @@ networks:
           gateway: 10.3.0.1
 
 services:
-  src-dns-server:
-    container_name: src-dns-server
-    image: ubuntu/bind9:latest
-    volumes:
-      - ./resources/src-dns-server-config-volume/catch-all.zone:/etc/bind/catch-all.zone
-      - ./resources/src-dns-server-config-volume/named.conf.local:/etc/bind/named.conf.local
-      - ./resources/src-dns-server-config-volume/named.conf.default-zones:/etc/bind/named.conf.default-zones
-    networks:
-      driver-did-scid:
-        ipv4_address: 10.3.0.2
-  src-web-server:
-    container_name: src-web-server
-    image: nginx:1.27.4
-    volumes:
-      - src-web-server-html-volume:/usr/share/nginx/html
-      - ./resources/src-web-server-config-volume/default-ssl.conf:/etc/nginx/conf.d/default-ssl.conf
-      - ./resources/src-web-server-config-volume/self-signed.conf:/etc/nginx/snippets/self-signed.conf
-      - ./resources/src-web-server-config-volume/ssl-params.conf:/etc/nginx/snippets/ssl-params.conf
-      - ./resources/src-web-server-config-volume/dhparam.pem:/etc/nginx/dhparam.pem
-      - ./resources/src-web-server-config-volume/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
-      - ./resources/src-web-server-config-volume/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
-    networks:
-      driver-did-scid:
-        ipv4_address: 10.3.0.3
-    dns:
-      - "10.3.0.2"
-    ports:
-      - "10080:80"
-      - "10443:443"
   uni-resolver-web:
     container_name: uni-resolver-web
     image: universalresolver/uni-resolver-web:latest
@@ -74,6 +45,24 @@ services:
         ipv4_address: 10.3.0.11
     ports:
       - "10081:8080"
+  driver-did-webvh:
+    container_name: driver-did-webvh
+    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.4.0-1400145
+    environment:
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
+    networks:
+      driver-did-scid:
+        ipv4_address: 10.3.0.12
+    ports:
+      - "10082:8080"
+  driver-did-webs:
+    container_name: driver-did-webs
+    image: gleif/did-webs-resolver-service:0.2.6
+    networks:
+      driver-did-scid:
+        ipv4_address: 10.3.0.13
+    ports:
+      - "10083:7677"
   driver-did-scid-webvh:
     container_name: driver-did-scid-webvh
     image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.4.0-1400145
@@ -85,11 +74,9 @@ services:
       - ./resources/driver-did-scid-webvh-config-volume/nginx-selfsigned.crt:/opt/config/certs/nginx-selfsigned.crt
     networks:
       driver-did-scid:
-        ipv4_address: 10.3.0.12
+        ipv4_address: 10.3.0.21
     dns:
       - "10.3.0.2"
-    ports:
-      - "10082:8080"
   driver-did-scid-webs:
     container_name: driver-did-scid-webs
     image: gleif/did-webs-resolver-service:0.2.6
@@ -102,26 +89,32 @@ services:
       - ./resources/driver-did-scid-webvh-config-volume/nginx-selfsigned.crt:/opt/config/certs/nginx-selfsigned.crt
     networks:
       driver-did-scid:
-        ipv4_address: 10.3.0.13
+        ipv4_address: 10.3.0.22
     dns:
       - "10.3.0.2"
-    ports:
-      - "10083:7677"
-  driver-did-webvh:
-    container_name: driver-did-webvh
-    image: ghcr.io/decentralized-identity/uni-resolver-driver-did-webvh:v2.4.0-1400145
-    environment:
-      NODE_TLS_REJECT_UNAUTHORIZED: 0
+  src-dns-server:
+    container_name: src-dns-server
+    image: ubuntu/bind9:latest
+    volumes:
+      - ./resources/src-dns-server-config-volume/catch-all.zone:/etc/bind/catch-all.zone
+      - ./resources/src-dns-server-config-volume/named.conf.local:/etc/bind/named.conf.local
+      - ./resources/src-dns-server-config-volume/named.conf.default-zones:/etc/bind/named.conf.default-zones
     networks:
       driver-did-scid:
-        ipv4_address: 10.3.0.21
-    ports:
-      - "10084:8080"
-  driver-did-webs:
-    container_name: driver-did-webs
-    image: gleif/did-webs-resolver-service:0.2.6
+        ipv4_address: 10.3.0.2
+  src-web-server:
+    container_name: src-web-server
+    image: nginx:1.27.4
+    volumes:
+      - src-web-server-html-volume:/usr/share/nginx/html
+      - ./resources/src-web-server-config-volume/default-ssl.conf:/etc/nginx/conf.d/default-ssl.conf
+      - ./resources/src-web-server-config-volume/self-signed.conf:/etc/nginx/snippets/self-signed.conf
+      - ./resources/src-web-server-config-volume/ssl-params.conf:/etc/nginx/snippets/ssl-params.conf
+      - ./resources/src-web-server-config-volume/dhparam.pem:/etc/nginx/dhparam.pem
+      - ./resources/src-web-server-config-volume/nginx-selfsigned.crt:/etc/ssl/certs/nginx-selfsigned.crt
+      - ./resources/src-web-server-config-volume/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
     networks:
       driver-did-scid:
-        ipv4_address: 10.3.0.22
-    ports:
-      - "10085:7677"
+        ipv4_address: 10.3.0.3
+    dns:
+      - "10.3.0.2"
