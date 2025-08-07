@@ -58,8 +58,8 @@ curl -X GET http://localhost:8080/1.0/identifiers/did:scid:vh:1:QmPEQVM1JPTyrvEg
 ```
 curl -X GET http://localhost:8080/1.0/identifiers/did:webs:peacekeeper.github.io:did-webs-iiw37-tutorial:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
 curl -X GET http://localhost:8080/1.0/identifiers/did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=gist.githubusercontent.com%2Fpeacekeeper%2F01fa6c0a2c00c161b9a56f1d094b081f%2Fraw
-curl -X GET http://localhost:8080/1.0/identifiers/did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=did:cheqd:testnet:3ba8fcbb-45c8-4b20-b5a2-b4155199a1ac/resources/4c3f5d83-03f0-466f-8455-4f8d2c760ef0
-curl -X GET http://localhost:8080/1.0/identifiers/did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=hedera:testnet:0.0.5815515
+curl -X GET http://localhost:8080/1.0/identifiers/did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=did:cheqd:testnet:c2e0c5b8-b2a1-489a-a969-abe6d5459bad/resources/a498845c-a74d-497f-b706-56dfb9b3f1c5
+curl -X GET http://localhost:8080/1.0/identifiers/did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP?src=hedera:testnet:0.0.6525344
 ```
 
 ## Build (native Java)
@@ -72,7 +72,7 @@ The driver recognizes the following environment variables:
 
 ### `uniresolver_driver_did_scid_didResolverUri`
 
- * TODO
+ * The endpoint of a DID Resolver that can dereference DID URLs as the value of the "src" parameter.
 
 ## Additional (theoretical) examples
 
