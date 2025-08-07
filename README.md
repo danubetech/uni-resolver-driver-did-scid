@@ -7,7 +7,8 @@ This is a [Universal Resolver](https://github.com/decentralized-identity/univers
 ## Specifications
 
 * [Decentralized Identifiers](https://www.w3.org/TR/did-1.0/)
-* [DID Method Specification](https://lf-toip.atlassian.net/wiki/spaces/HOME/pages/88572360/DID+SCID+Method+Specification)
+* [DID SCID Method Specification](https://lf-toip.atlassian.net/wiki/spaces/HOME/pages/88572360/DID+SCID+Method+Specification)
+* [DID SCID Resolution Overview](https://lf-toip.atlassian.net/wiki/spaces/HOME/pages/131858449/DID+SCID+Resolution+Overview)
 
 ## Architecture
 
