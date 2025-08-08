@@ -20,11 +20,11 @@ uniresolver:
       supportsOptions: true
       testIdentifiers:
         - did:scid:vh:1:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p
+        - did:scid:ke:1:EKYGGh-FtAphGmSZbsuBs_t4qpsjYJ2ZqvMKluq9OxmP
     - pattern: "^(did:webvh:.+)$"
       url: http://driver-did-webvh:8080/
       testIdentifiers:
         - did:webvh:QmPEQVM1JPTyrvEgBcDXwjK4TeyLGSX1PxjgyeAisdWM1p:gist.githubusercontent.com:brianorwhatever:9c4633d18eb644f7a47f93a802691626:raw
-        - did:webvh:QmVJ5nUYb9iugnUz4yDfbe8UFbhmnsvS2EAzSpSfPScRAn:opsecid.github.io
     - pattern: "^(did:webs:.+)$"
       url: http://driver-did-webs:7677/
       acceptHeaderValue:
