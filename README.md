@@ -35,7 +35,7 @@ This driver also depends on "?src" dereferencers, which can process values of th
    | "?src" dereferencers                                         |
    |--------------------------------------------------------------|
    | DID URL            | Domain Name        | Hedera URI         |
-   | e.g. did:cheqd:... | e.g. exampe.com    | e.g. hedera:...    |
+   | e.g. did:cheqd:... | e.g. example.com   | e.g. hedera:...    |
    \--------------------------------------------------------------/
 ```
 
