@@ -24,6 +24,8 @@ USER jetty
 # variables
 
 ENV uniresolver_driver_did_scid_didResolverUri=https://dev.uniresolver.io/1.0/
+ENV uniresolver_driver_did_scid_didWebvhDriverUri: http://driver-did-scid-webvh:8080/1.0/identifiers/
+ENV uniresolver_driver_did_scid_didWebsDriverUri: http://driver-did-scid-webs:7677/1.0/identifiers/
 ENV uniresolver_driver_did_scid_wrapperFilesPath=/opt/wrapper-files/
 
 # copy from build stage
