@@ -6,7 +6,7 @@
 	<artifactId>uni-resolver-driver-did-scid</artifactId>
 	<packaging>${packaging.type}</packaging>
 	<name>uni-resolver-driver-did-scid</name>
-	<version>0.16.0</version>
+	<version>0.17-SNAPSHOT</version>
 
 	<parent>
 		<groupId>decentralized-identity</groupId>
