@@ -52,7 +52,10 @@ public class WebvhSourceMethod extends SourceMethod {
 
         String didDomainAndPath = sourceDid.getMethodSpecificId().substring(sourceDid.getMethodSpecificId().indexOf(":") + 1).replace(":", "/");
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didDomainAndPath {}", sourceDid, didDomainAndPath);
-        String didPath = didDomainAndPath.substring(didDomainAndPath.indexOf("/") + 1);
+        // Where the did:webvh driver will look (did:webvh's DID-to-HTTPS transformation): {path}/did.jsonl, or
+        // /.well-known/did.jsonl for a DID with no path (did:webvh:{SCID}:example.com).
+        int slash = didDomainAndPath.indexOf("/");
+        String didPath = slash < 0 ? ".well-known" : didDomainAndPath.substring(slash + 1);
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: didPath {}", sourceDid, didPath);
         if (! didPath.endsWith("/")) didPath += "/";
 
