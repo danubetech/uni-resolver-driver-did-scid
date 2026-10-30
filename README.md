@@ -75,6 +75,10 @@ The driver recognizes the following environment variables:
 
  * The endpoint of a DID Resolver that can dereference DID URLs as the value of the "src" parameter.
 
+### `uniresolver_driver_did_scid_srcUrlSchemes`
+
+ * The schemes an absolute URL as the value of the "src" parameter may have, comma-separated (for example `https,http`). Default: `https`. Relative URLs (such as `example.com/a`) are always relative to `https://`.
+
 ## Additional (theoretical) examples
 
 ```

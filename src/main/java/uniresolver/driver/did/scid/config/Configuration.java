@@ -37,11 +37,13 @@ public class Configuration {
             String env_didWebvhDriverUri = System.getenv("uniresolver_driver_did_scid_didWebvhDriverUri");
             String env_didWebsDriverUri = System.getenv("uniresolver_driver_did_scid_didWebsDriverUri");
             String env_wrapperFilesPath = System.getenv("uniresolver_driver_did_scid_wrapperFilesPath");
+            String env_srcUrlSchemes = System.getenv("uniresolver_driver_did_scid_srcUrlSchemes");
 
             if (env_didResolverUri != null) properties.put("didResolverUri", env_didResolverUri);
             if (env_didWebvhDriverUri != null) properties.put("didWebvhDriverUri", env_didWebvhDriverUri);
             if (env_didWebsDriverUri != null) properties.put("didWebsDriverUri", env_didWebsDriverUri);
             if (env_wrapperFilesPath != null) properties.put("wrapperFilesPath", env_wrapperFilesPath);
+            if (env_srcUrlSchemes != null) properties.put("srcUrlSchemes", env_srcUrlSchemes);
         } catch (Exception ex) {
             throw new IllegalArgumentException(ex.getMessage(), ex);
         }
@@ -83,6 +85,10 @@ public class Configuration {
 
             String prop_wrapperFilesPath = (String) properties.get("wrapperFilesPath");
 
+            // parse srcUrlSchemes (the schemes an absolute 'src' URL may have; https only when not set)
+
+            String prop_srcUrlSchemes = (String) properties.get("srcUrlSchemes");
+
             // configure
 
             Map<String, Map<Integer, SourceMethod>> sourceMethods = Map.of(
@@ -97,7 +103,7 @@ public class Configuration {
             List<SrcDereferencer> srcDereferencers = List.of(
                     new DidUrlSrcDereferencer(clientUniDereferencer),
                     new HederaUriDereferencer(),
-                    new DomainSrcDereferencer()
+                    new DomainSrcDereferencer(DomainSrcDereferencer.parseSchemes(prop_srcUrlSchemes))
             );
 
             didScidDriver.setSourceMethods(sourceMethods);
