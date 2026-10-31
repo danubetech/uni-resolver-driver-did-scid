@@ -40,7 +40,7 @@ public class WebvhSourceMethod extends SourceMethod {
         if (id == null) throw new IllegalArgumentException("No 'id' found in initial line: " + initialLineMap);
         if (! id.startsWith("did:webvh:" + scid)) throw new IllegalArgumentException("No 'scid' " + scid + " found in 'id': " + id);
         DID sourceDid = DID.fromString(id);
-        if (log.isInfoEnabled()) log.info("For 'srcData' {}: {}", srcData.length, sourceDid);
+        if (log.isInfoEnabled()) log.info("For 'scid' {} and 'srcData' {} bytes and 'id' {} -> {}", scid, srcData.length, id, sourceDid);
         return sourceDid;
     }
 
