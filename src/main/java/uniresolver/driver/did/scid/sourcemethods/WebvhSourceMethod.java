@@ -61,7 +61,9 @@ public class WebvhSourceMethod extends SourceMethod {
         boolean mkdir = path.mkdirs();
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: mkdir {}", sourceDid, mkdir);
 
-        String srcDataDidJsonl = objectMapper.writeValueAsString(objectMapper.readValue(srcData, Map.class));
+        // The whole log, as it came: did.jsonl is JSON Lines, one entry per line, and the did:webvh driver
+        // resolves to its latest entry. (Reading it as one JSON value kept only the first line.)
+        String srcDataDidJsonl = new String(srcData, StandardCharsets.UTF_8);
 
         File fileDidJsonl = new File(path, "/did.jsonl");
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: fileDidJsonl {}", sourceDid, fileDidJsonl);
