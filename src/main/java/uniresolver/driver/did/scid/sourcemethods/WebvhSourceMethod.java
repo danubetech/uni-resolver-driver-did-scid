@@ -64,13 +64,10 @@ public class WebvhSourceMethod extends SourceMethod {
         // The whole log, as it came: did.jsonl is JSON Lines, one entry per line, and the did:webvh driver
         // resolves to its latest entry. (Reading it as one JSON value kept only the first line.)
         String srcDataDidJsonl = new String(srcData, StandardCharsets.UTF_8);
-        for (String line : srcDataDidJsonl.split("\n")) {
-            if (! line.isBlank()) objectMapper.readTree(line);
-        }
 
         File fileDidJsonl = new File(path, "/did.jsonl");
         if (log.isDebugEnabled()) log.debug("For 'sourceDid' {}: fileDidJsonl {}", sourceDid, fileDidJsonl);
-        try (FileWriter fileWriter = new FileWriter(fileDidJsonl, StandardCharsets.UTF_8)) {
+        try (FileWriter fileWriter = new FileWriter(fileDidJsonl)) {
             fileWriter.write(srcDataDidJsonl);
         } catch (IOException ex) {
             throw new RuntimeException("Cannot write fileDidJsonl " + fileDidJsonl + ": " + ex.getMessage(), ex);
